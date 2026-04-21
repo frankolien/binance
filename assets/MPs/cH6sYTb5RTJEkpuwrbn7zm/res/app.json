@@ -1,0 +1,111 @@
+{
+  "darkmode": true,
+  "subThemes": [
+    "dark_midnight",
+    "dark_classic",
+    "light_glacier"
+  ],
+  "entryPagePath": "pages/index/index",
+  "pages": [
+    "pages/wrapper/index",
+    "pages/test/index",
+    "pages/index/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "@navBgColor",
+    "navigationBarTextStyle": "@navTxtStyle",
+    "backgroundColor": "@backgroundColor"
+  },
+  "themeLocation": "./theme.json",
+  "prefetchRules": {},
+  "extend": {
+    "privatePrefetchRules": {
+      "pages/index/index": {
+        "${API_HOST}/bapi/accounts/v1/protect/risk/challenge/getSteps?bizNo=${bizNo}": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          },
+          "hitPrefetchExtraRules": {
+            "requiredQueryKeys": [
+              "bizNo"
+            ]
+          }
+        },
+        "${API_HOST}/bapi/accounts/v2/protect/account/fido2/all-credentials": {
+          "method": "POST",
+          "header": {
+            "content-type": "application/json"
+          },
+          "data": {}
+        }
+      }
+    }
+  },
+  "rendererComponents": [],
+  "appid": "cH6sYTb5RTJEkpuwrbn7zm",
+  "skeleton": {
+    "pages/index/index": "skeleton/page/index"
+  },
+  "theme": {
+    "light": {
+      "backgroundColor": "#FFFFFF",
+      "navBgColor": "#FFFFFF",
+      "navTxtStyle": "black",
+      "tabFontColor": "#848E9C",
+      "tabSelectedColor": "#202630",
+      "tabBgColor": "#ffffff",
+      "tabBorderStyle": "black"
+    },
+    "dark": {
+      "backgroundColor": "#202630",
+      "navBgColor": "#202630",
+      "navTxtStyle": "white",
+      "tabFontColor": "#848E9C",
+      "tabSelectedColor": "#EAECEF",
+      "tabBgColor": "#202630",
+      "tabBorderStyle": "white"
+    },
+    "light_glacier": {
+      "backgroundColor": "#FFFFFF",
+      "navBgColor": "#FFFFFF",
+      "navTxtStyle": "#000000",
+      "tabFontColor": "#909090",
+      "tabSelectedColor": "#000000",
+      "tabBgColor": "#FFFFFF",
+      "tabBorderStyle": "#EDEDED"
+    },
+    "dark_classic": {
+      "backgroundColor": "#202630",
+      "navBgColor": "#202630",
+      "navTxtStyle": "#EAECEF",
+      "tabFontColor": "#848E9C",
+      "tabSelectedColor": "#EAECEF",
+      "tabBgColor": "#202630",
+      "tabBorderStyle": "#333B47"
+    },
+    "dark_midnight": {
+      "backgroundColor": "#000000",
+      "navBgColor": "#000000",
+      "navTxtStyle": "#FFFFFF",
+      "tabFontColor": "#909090",
+      "tabSelectedColor": "#FFFFFF",
+      "tabBgColor": "#000000",
+      "tabBorderStyle": "#3D3D3D"
+    }
+  },
+  "page": {
+    "pages/wrapper/index": {
+      "navigationBarTitleText": "",
+      "navigationStyle": "custom"
+    },
+    "pages/test/index": {},
+    "pages/index/index": {
+      "navigationBarTitleText": "",
+      "navigationStyle": "custom"
+    }
+  },
+  "widgetConfigs": {}
+}

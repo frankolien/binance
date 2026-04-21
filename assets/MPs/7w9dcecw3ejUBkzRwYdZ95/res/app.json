@@ -1,0 +1,378 @@
+{
+  "darkmode": true,
+  "subThemes": [
+    "dark_midnight",
+    "dark_classic",
+    "light_glacier"
+  ],
+  "entryPagePath": "pages/mp/login/index",
+  "pages": [
+    "pages/login/index",
+    "pages/forgot-account/index",
+    "pages/device-oauth/index",
+    "pages/login/$type/index",
+    "pages/login/$authType/oauth/authorize/index",
+    "pages/mp/webview/index",
+    "pages/mp/unlock-result/index",
+    "pages/mp/telegram-bind-fail/index",
+    "pages/mp/reset-password/index",
+    "pages/mp/relogin/index",
+    "pages/mp/register-set-password/index",
+    "pages/mp/register-done/index",
+    "pages/mp/register/index",
+    "pages/mp/redirect-authorize/index",
+    "pages/mp/phone-country-select/index",
+    "pages/mp/phone-binding-selector/index",
+    "pages/mp/passkey-adding/index",
+    "pages/mp/partner-connect/index",
+    "pages/mp/partner-bind/index",
+    "pages/mp/oauth-signin/index",
+    "pages/mp/oauth-authorize/index",
+    "pages/mp/notice/index",
+    "pages/mp/mobile-login-authorize/index",
+    "pages/mp/mfa-reset/index",
+    "pages/mp/login-verify/index",
+    "pages/mp/login-password/index",
+    "pages/mp/login/index",
+    "pages/mp/locationResidence/index",
+    "pages/mp/forgot-password/index",
+    "pages/mp/country-selector/index",
+    "pages/mp/bio-auth-guide/index",
+    "pages/mp/2fa-setup-guide/index",
+    "pages/login/verification/index",
+    "pages/login/unlock-result/index",
+    "pages/login/stay-signed-in/index",
+    "pages/login/social-login-bind-ways/index",
+    "pages/login/social-login-bind-account/index",
+    "pages/login/restrict-suspend/index",
+    "pages/login/restrict-notice/index",
+    "pages/login/redirect-authorize/index",
+    "pages/login/quick-login/index",
+    "pages/login/qr-confirm/index",
+    "pages/login/password/index",
+    "pages/login/mobile-login-authorize/index",
+    "pages/login/mfa/index",
+    "pages/login/confirm-new-device-login/index",
+    "pages/login/bind/index",
+    "pages/forgot-account/verify/index",
+    "pages/forgot-account/result/index",
+    "pages/forgot-account/find-account/index",
+    "pages/device-oauth/success/index",
+    "pages/device-oauth/failure/index",
+    "pages/device-oauth/authorize/index",
+    "pages/login/restrict-notice/$code/$country/index",
+    "pages/mp/register-module/verification-new-register/index",
+    "pages/mp/register-module/social-login-register/index",
+    "pages/mp/register-module/social-login-bind-ways/index",
+    "pages/mp/register-module/social-login-bind-account/index",
+    "pages/mp/register-module/select-credential-type/index",
+    "pages/mp/register-module/person-form/index",
+    "pages/mp/register-module/business-info-form/index",
+    "pages/mp/register-module/business-form/index",
+    "pages/mp/register/welcome/index",
+    "pages/mp/register/social-register-verify/index",
+    "pages/mp/register/social-create-account/index",
+    "pages/mp/register/register-success/index",
+    "pages/mp/register/create-account/index",
+    "pages/mp/register/bind-verify/index",
+    "pages/mp/register/bind-mobile/index",
+    "pages/mp/register/bind-email/index",
+    "pages/mp/mfa-reset/select/index",
+    "pages/mp/mfa-reset/result/index",
+    "pages/mp/mfa-reset/confirm/index",
+    "pages/mp/mfa-reset/bind/index",
+    "pages/mp/junior/scan-landing/index",
+    "pages/mp/junior/mfa-guide-fail/index",
+    "pages/mp/junior/mfa-guide/index",
+    "pages/mp/forgot-password/success/index",
+    "pages/mp/forgot-password/reset/index",
+    "pages/login/confirm-new-device-login/reject/index",
+    "pages/index"
+  ],
+  "preloadRule": {
+    "pages/mp/login/index": {
+      "network": "all",
+      "packages": [
+        "pages/mp/register-module"
+      ]
+    },
+    "pages/mp/register/index": {
+      "network": "all",
+      "packages": [
+        "pages/mp/register-module"
+      ]
+    },
+    "pages/mp/locationResidence/index": {
+      "network": "all",
+      "packages": [
+        "pages/mp/register-module"
+      ]
+    }
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "@navBgColor",
+    "navigationBarTextStyle": "@navTxtStyle",
+    "backgroundColor": "@backgroundColor"
+  },
+  "themeLocation": "./bmpTheme.json",
+  "prefetchRules": {},
+  "prerender": {
+    "match": [
+      "mp/login",
+      "mp/register",
+      "mp/locationResidence"
+    ]
+  },
+  "extend": {
+    "privatePrefetchRules": {
+      "pages/mp/login/index": {
+        "${API_HOST}/bapi/accounts/v1/public/country/list": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          }
+        },
+        "${API_HOST}/bapi/accounts/v2/public/account/ip/country-short": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          }
+        }
+      },
+      "pages/mp/register/index": {
+        "${API_HOST}/bapi/accounts/v1/public/country/list": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          }
+        },
+        "${API_HOST}/bapi/accounts/v2/public/account/ip/country-short": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          }
+        },
+        "${API_HOST}/bapi/accounts/v1/public/account/country/promote-and-term/show": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          }
+        },
+        "${API_HOST}/bapi/accounts/v1/public/authcenter/auth": {
+          "method": "POST",
+          "header": {
+            "content-type": "application/json"
+          },
+          "data": {}
+        }
+      },
+      "pages/mp/locationResidence/index": {
+        "${API_HOST}/bapi/accounts/v1/public/country/list": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          }
+        },
+        "${API_HOST}/bapi/accounts/v2/public/account/ip/country-short": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          }
+        },
+        "${API_HOST}/bapi/accounts/v1/public/account/country/promote-and-term/show": {
+          "method": "GET",
+          "header": {
+            "content-type": "application/json"
+          }
+        },
+        "${API_HOST}/bapi/accounts/v1/public/authcenter/auth": {
+          "method": "POST",
+          "header": {
+            "content-type": "application/json"
+          },
+          "data": {}
+        }
+      },
+      "pages/login/qr-confirm/index": {
+        "${API_HOST}/bapi/accounts/v1/friendly/qrcode/get-content": {
+          "method": "POST",
+          "data": {
+            "qrCode": "${qrCode}"
+          },
+          "header": {
+            "content-type": "application/json"
+          }
+        },
+        "${API_HOST}/bapi/accounts/v1/public/authcenter/auth": {
+          "method": "POST",
+          "data": {},
+          "header": {
+            "content-type": "application/json"
+          }
+        }
+      },
+      "pages/mp/oauth-authorize/index": {
+        "${API_HOST}/bapi/apex/v1/private/apex/marketing/user/current/profile/query": {
+          "method": "POST",
+          "data": {
+            "nicknameQueryType": "NORMAL"
+          },
+          "header": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    }
+  },
+  "rendererComponents": [],
+  "appid": "7w9dcecw3ejUBkzRwYdZ95",
+  "skeleton": {},
+  "theme": {
+    "light": {
+      "backgroundColor": "#FFFFFF",
+      "navBgColor": "#FFFFFF",
+      "navTxtStyle": "black",
+      "tabFontColor": "#848E9C",
+      "tabSelectedColor": "#202630",
+      "tabBgColor": "#ffffff",
+      "tabBorderStyle": "black"
+    },
+    "dark": {
+      "backgroundColor": "#202630",
+      "navBgColor": "#202630",
+      "navTxtStyle": "white",
+      "tabFontColor": "#848E9C",
+      "tabSelectedColor": "#EAECEF",
+      "tabBgColor": "#202630",
+      "tabBorderStyle": "white"
+    },
+    "light_glacier": {
+      "backgroundColor": "#FFFFFF",
+      "navBgColor": "#FFFFFF",
+      "navTxtStyle": "#000000",
+      "tabFontColor": "#909090",
+      "tabSelectedColor": "#000000",
+      "tabBgColor": "#FFFFFF",
+      "tabBorderStyle": "#EDEDED"
+    },
+    "dark_classic": {
+      "backgroundColor": "#202630",
+      "navBgColor": "#202630",
+      "navTxtStyle": "#EAECEF",
+      "tabFontColor": "#848E9C",
+      "tabSelectedColor": "#EAECEF",
+      "tabBgColor": "#202630",
+      "tabBorderStyle": "#333B47"
+    },
+    "dark_midnight": {
+      "backgroundColor": "#000000",
+      "navBgColor": "#000000",
+      "navTxtStyle": "#FFFFFF",
+      "tabFontColor": "#909090",
+      "tabSelectedColor": "#FFFFFF",
+      "tabBgColor": "#000000",
+      "tabBorderStyle": "#3D3D3D"
+    }
+  },
+  "page": {
+    "pages/login/index": {},
+    "pages/forgot-account/index": {},
+    "pages/device-oauth/index": {},
+    "pages/login/$type/index": {},
+    "pages/login/$authType/oauth/authorize/index": {},
+    "pages/mp/webview/index": {},
+    "pages/mp/unlock-result/index": {},
+    "pages/mp/telegram-bind-fail/index": {},
+    "pages/mp/reset-password/index": {},
+    "pages/mp/relogin/index": {},
+    "pages/mp/register-set-password/index": {},
+    "pages/mp/register-done/index": {},
+    "pages/mp/register/index": {},
+    "pages/mp/redirect-authorize/index": {},
+    "pages/mp/phone-country-select/index": {},
+    "pages/mp/phone-binding-selector/index": {},
+    "pages/mp/passkey-adding/index": {},
+    "pages/mp/partner-connect/index": {},
+    "pages/mp/partner-bind/index": {},
+    "pages/mp/oauth-signin/index": {},
+    "pages/mp/oauth-authorize/index": {},
+    "pages/mp/notice/index": {},
+    "pages/mp/mobile-login-authorize/index": {},
+    "pages/mp/mfa-reset/index": {},
+    "pages/mp/login-verify/index": {},
+    "pages/mp/login-password/index": {},
+    "pages/mp/login/index": {},
+    "pages/mp/locationResidence/index": {},
+    "pages/mp/forgot-password/index": {},
+    "pages/mp/country-selector/index": {},
+    "pages/mp/bio-auth-guide/index": {},
+    "pages/mp/2fa-setup-guide/index": {},
+    "pages/login/verification/index": {},
+    "pages/login/unlock-result/index": {},
+    "pages/login/stay-signed-in/index": {},
+    "pages/login/social-login-bind-ways/index": {},
+    "pages/login/social-login-bind-account/index": {},
+    "pages/login/restrict-suspend/index": {},
+    "pages/login/restrict-notice/index": {},
+    "pages/login/redirect-authorize/index": {},
+    "pages/login/quick-login/index": {},
+    "pages/login/qr-confirm/index": {},
+    "pages/login/password/index": {},
+    "pages/login/mobile-login-authorize/index": {},
+    "pages/login/mfa/index": {
+      "i18n": {
+        "namespaces": [
+          "widget-face"
+        ]
+      }
+    },
+    "pages/login/confirm-new-device-login/index": {},
+    "pages/login/bind/index": {},
+    "pages/forgot-account/verify/index": {},
+    "pages/forgot-account/result/index": {
+      "i18n": {
+        "namespaces": [
+          "risk-appeal"
+        ]
+      }
+    },
+    "pages/forgot-account/find-account/index": {},
+    "pages/device-oauth/success/index": {},
+    "pages/device-oauth/failure/index": {},
+    "pages/device-oauth/authorize/index": {},
+    "pages/login/restrict-notice/$code/$country/index": {},
+    "pages/mp/register-module/verification-new-register/index": {},
+    "pages/mp/register-module/social-login-register/index": {},
+    "pages/mp/register-module/social-login-bind-ways/index": {},
+    "pages/mp/register-module/social-login-bind-account/index": {},
+    "pages/mp/register-module/select-credential-type/index": {},
+    "pages/mp/register-module/person-form/index": {},
+    "pages/mp/register-module/business-info-form/index": {},
+    "pages/mp/register-module/business-form/index": {},
+    "pages/mp/register/welcome/index": {},
+    "pages/mp/register/social-register-verify/index": {},
+    "pages/mp/register/social-create-account/index": {},
+    "pages/mp/register/register-success/index": {},
+    "pages/mp/register/create-account/index": {},
+    "pages/mp/register/bind-verify/index": {},
+    "pages/mp/register/bind-mobile/index": {},
+    "pages/mp/register/bind-email/index": {},
+    "pages/mp/mfa-reset/select/index": {},
+    "pages/mp/mfa-reset/result/index": {},
+    "pages/mp/mfa-reset/confirm/index": {},
+    "pages/mp/mfa-reset/bind/index": {},
+    "pages/mp/junior/scan-landing/index": {},
+    "pages/mp/junior/mfa-guide-fail/index": {
+      "navigationStyle": "custom"
+    },
+    "pages/mp/junior/mfa-guide/index": {
+      "navigationStyle": "custom"
+    },
+    "pages/mp/forgot-password/success/index": {},
+    "pages/mp/forgot-password/reset/index": {},
+    "pages/login/confirm-new-device-login/reject/index": {},
+    "pages/index": {}
+  }
+}

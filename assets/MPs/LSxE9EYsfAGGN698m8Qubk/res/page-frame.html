@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,user-scalable=no"
+    />
+    <title>Renderer Service</title>
+    <link rel="stylesheet" href="../common/renderer-service.css" />
+    <link rel="stylesheet" href="./__app.css?appId=LSxE9EYsfAGGN698m8Qubk" />
+    <!-- hook for native to inject js -->
+    <script src="/nezha-app-envs.js"></script>
+    <script>
+      window.globalThis = window
+      globalThis.__modules__ = {}
+      globalThis.define = function (name, factory) {
+        if (globalThis.__modules__[name]) {
+          console.warn('[globalThis.define] skip duplicated module', name, globalThis.__modules__)
+          return
+        }
+        const jsModule = { status: 1 }
+        jsModule.factory = factory
+        globalThis.__modules__[name] = jsModule
+      }
+
+      globalThis.require = function (moduleName) {
+        const module = { exports: {} }
+        const jsModule = globalThis.__modules__[moduleName]
+        if (!jsModule) {
+          console.error('[globalThis.require] module not found', moduleName)
+        }
+        if (jsModule.status === 1) {
+          const require = function (path, callback) {
+            if (typeof callback !== 'function') {
+              return globalThis.require(path)
+            }
+          }
+
+          jsModule.factory(require, module, module.exports)
+          jsModule.exports = module.exports
+          jsModule.status = 2
+        }
+        return jsModule.exports
+      }
+      
+      globalThis.__REPORT_POINTS__ = []
+      globalThis.__REPORT_POINTS__.push({time: Date.now(), event: "load-page-frame-success"})
+    </script>
+    <script src="../common/renderer-service.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // Note: notify page MPRenderService is ready
+      document.dispatchEvent(new CustomEvent('MPRenderServiceReady'))
+      function _ready() {
+        const canUseFlutterDocumentAsyncDomApi = typeof __mp_runtime_config !== 'undefined' && __mp_runtime_config.removeSyncApi && document.readyState_async
+        if (canUseFlutterDocumentAsyncDomApi) {
+          document.readyState_async.then((readyState) => {
+            if (readyState !== 'loading') {
+            MPRenderService.webviewLoad();
+            } else {
+              document.addEventListener('DOMContentLoaded', function () {
+                MPRenderService.webviewLoad();
+              });
+            }
+          })
+          return 
+        }
+        if (document.readyState !== "loading") {
+          MPRenderService.webviewLoad();
+        } else {
+          document.addEventListener("DOMContentLoaded", function () {
+            MPRenderService.webviewLoad();
+          });
+        }
+      }
+      _ready();
+    </script>
+  </body>
+</html>

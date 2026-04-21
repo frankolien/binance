@@ -1,0 +1,16 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="rectangleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="white" />
+            <stop offset="100%" stop-color="#E6E8EA" />
+        </linearGradient>
+    </defs>
+<path d="M24 8H62L82 28V88H24V8Z" fill="url(#rectangleGradient)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9999 70.3431L28.8491 55.4939L34.506 61.1508L19.6567 76L13.9999 70.3431Z" fill="#AEB4BC"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.1923 74.1508L15.8491 68.4939L21.506 74.1508L15.8491 79.8076L10.1923 74.1508Z" fill="#76808F"/>
+<path d="M25 48C25 38.6112 32.6112 31 42 31C51.3888 31 59 38.6112 59 48C59 57.3888 51.3888 65 42 65C32.6112 65 25 57.3888 25 48Z" stroke="#76808F" stroke-width="6"/>
+<path d="M49 77L54 72L59 77L54 82L49 77Z" fill="white"/>
+<path d="M68 49L72 45L76 49L72 53L68 49Z" fill="#E6E8EA"/>
+<path d="M32 18L35 15L38 18L35 21L32 18Z" fill="#E6E8EA"/>
+<path d="M82 28H62V8L82 28Z" fill="#E6E8EA"/>
+</svg>

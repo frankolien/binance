@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Captcha</title>
+    <script src="captcha.min.js"></script>
+</head>
+
+<body>
+<script>
+
+    var queryParams = getQueryParam();
+    var cdnDomain = queryParams['cdnDomain'];
+    var apiHost = queryParams['apiDomain'];
+    var staticHost = "https://" + (cdnDomain? cdnDomain : "bin.bnbstatic.com");
+    var apiHost = "https://" + (apiHost? apiHost: "www.binance.com");
+    var apiBasePath = '/bapi/composite/v1/public/antibot';
+
+    function getQueryParam() {
+        var url = location.href;
+        var queryPos = url.indexOf('?')
+        if (queryPos < 0) {
+            return {}
+        }
+        var queryString = url.substring(queryPos + 1)
+        var params = {}
+        for(var i=0; i<queryString.split('&').length; i++){
+            var part = queryString.split('&')[i].split('=');
+            var key = decodeURIComponent(part[0] || '');
+            var value = decodeURIComponent(part[1] || '');
+            params[key] = value;
+        }
+        return params
+    }
+
+    window.onerror = function (message, source, lineno, colno, error) {
+        sendError("jsError", JSON.stringify({message: message, source:source, lineNo: lineNo, error:error}));
+    }
+
+    try {
+        var captchaOption = {
+            //lang: '',
+            //bizId: "",
+            appEmbed: true,
+            staticHost: staticHost,
+            apiHost: apiHost,
+            apiBasePath: apiBasePath
+        };
+        var query = getQueryParam();
+        //Object.assign(captchaOption, query);
+        for(var attr in query){
+            captchaOption[attr] = query[attr];
+        }
+        var captcha = new BCaptcha(captchaOption);
+        captcha.show({});
+    } catch (e) {
+        sendError("showCaptcha", e.toString());
+    }
+
+    function sendError(type, message){
+        var feMonitorAPI = apiHost + apiBasePath + '/fe_monitor'
+        var src = feMonitorAPI + "?type=" + type + "&message=" + encodeURIComponent(message) + "&href=" + encodeURIComponent(location.href);
+        var image = new Image();
+        image["src"] = src;
+        window["_tmp123456"] = image;
+    }
+
+</script>
+
+</body>
+</html>

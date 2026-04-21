@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File and Camera Access Demo</title>
+</head>
+<body>
+<h1>File and Camera Access Demo</h1>
+
+<!-- 用于显示图片的区域 -->
+<div id="imagePreview">
+    <img id="previewImage" src="" alt="Preview Image" style="display:none;">
+</div>
+
+<!-- 文件大小显示区域 -->
+<div id="fileSizeInfo">
+    File size: <span id="fileSize">-</span> bytes
+</div>
+
+<!-- 摄像头预览区域 -->
+<video id="video" width="320" height="240" autoplay></video>
+<button id="snapButton" style="display: none;">Snap Photo</button>
+
+<!-- 选择图片按钮 -->
+<button id="chooseImage">Choose Image</button>
+
+<!-- 选择文件按钮 -->
+<button id="chooseFile">Choose File</button>
+
+<!-- 开启相机按钮 -->
+<button id="openCamera">Open Camera</button>
+
+<script>
+    // 选择图片
+    document.getElementById('chooseImage').addEventListener('click', function () {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = function(e) {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImage').src = e.target.result;
+                document.getElementById('previewImage').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        };
+        input.click();
+    });
+
+    // 选择文件
+    document.getElementById('chooseFile').addEventListener('click', function () {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = function(e) {
+            var file = e.target.files[0];
+            document.getElementById('fileSize').textContent = file.size;
+        };
+        input.click();
+    });
+
+    // 打开相机
+    async function openCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.getElementById('video');
+            video.srcObject = stream;
+            video.play();
+
+            // 显示拍照按钮
+            document.getElementById('snapButton').style.display = 'block';
+
+            // 拍照功能
+            document.getElementById('snapButton').addEventListener('click', function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                document.getElementById('previewImage').src = canvas.toDataURL();
+                document.getElementById('previewImage').style.display = 'block';
+            });
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+        }
+    }
+
+    document.getElementById('openCamera').addEventListener('click', openCamera);
+</script>
+</body>
+</html>

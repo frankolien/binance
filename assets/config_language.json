@@ -1,0 +1,253 @@
+{
+  "match": [
+    {
+      "target": "en",
+      "mapTo": "en",
+      "name": "English",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/en/ns/app.xml"
+    }, {
+      "target": "zh-CN",
+      "mapTo": "zh",
+      "name": "简体中文",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/zh/ns/app.xml"
+    }, {
+      "target": "vi",
+      "mapTo": "vi-VN",
+      "name": "Tiếng Việt",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/vi-VN/ns/app.xml"
+    }, {
+      "target": "es-LA",
+      "mapTo": "es-LA",
+      "name": "Español (Latinoamérica)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/es-LA/ns/app.xml"
+    }, {
+      "target": "ru",
+      "mapTo": "ru-RU",
+      "name": "Русский",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/ru-RU/ns/app.xml"
+    }, {
+      "target": "pt-BR",
+      "mapTo": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/pt-BR/ns/app.xml"
+    }, {
+      "target": "zh-TW",
+      "mapTo": "zh-TW",
+      "name": "繁體中文",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/zh-TW/ns/app.xml"
+    }, {
+      "target": "pl",
+      "mapTo": "pl-PL",
+      "name": "Polski",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/pl-PL/ns/app.xml"
+    }, {
+      "target": "uk-UA",
+      "mapTo": "uk-UA",
+      "name": "Ukrainian",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/uk-UA/ns/app.xml"
+    }, {
+      "target": "fr",
+      "mapTo": "fr-FR",
+      "name": "Français",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/fr-FR/ns/app.xml"
+    }, {
+      "target": "id",
+      "mapTo": "in-ID",
+      "name": "Bahasa Indonesia",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/in-ID/ns/app.xml"
+    }, {
+      "target": "ro",
+      "mapTo": "ro-RO",
+      "name": "Română",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/ro-RO/ns/app.xml"
+    }, {
+      "target": "es",
+      "mapTo": "es-ES",
+      "name": "Spanish",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/es-ES/ns/app.xml"
+    }, {
+      "target": "it",
+      "mapTo": "it-IT",
+      "name": "Italiano",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/it-IT/ns/app.xml"
+    }, {
+      "target": "cs",
+      "mapTo": "cs-CZ",
+      "name": "čeština",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/cs-CZ/ns/app.xml"
+    }, {
+      "target": "bg",
+      "mapTo": "bg-BG",
+      "name": "български",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/bg-BG/ns/app.xml"
+    }, {
+      "target": "lv",
+      "mapTo": "lv-LV",
+      "name": "latviešu valoda",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/lv-LV/ns/app.xml"
+    }, {
+      "target": "sv",
+      "mapTo": "sv-SE",
+      "name": "svenska",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/sv-SE/ns/app.xml"
+    }, {
+      "target": "pt-PT",
+      "mapTo": "pt-PT",
+      "name": "Português (Portugal)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/pt-PT/ns/app.xml"
+    }, {
+      "target": "el",
+      "mapTo": "el-GR",
+      "name": "Ελληνικά",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/el-GR/ns/app.xml"
+    }, {
+      "target": "sk",
+      "mapTo": "sk",
+      "name": "Slovenčina",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/sk/ns/app.xml"
+    }, {
+      "target": "sl",
+      "mapTo": "sl-SI",
+      "name": "Slovenščina",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/sl-SI/ns/app.xml"
+    }, {
+      "target": "kk-KZ",
+      "mapTo": "kk-KZ",
+      "name": "Қазақша",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/kk-KZ/ns/app.xml"
+    }, {
+      "target": "de-CH",
+      "mapTo": "de-CH",
+      "name": "German (Switzerland)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/de-CH/ns/app.xml"
+    }, {
+      "target": "da-DK",
+      "mapTo": "da-DK",
+      "name": "Dansk",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/da-DK/ns/app.xml"
+    }, {
+      "target": "fr-AF",
+      "mapTo": "fr-FR",
+      "name": "Français (Afrique)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/fr-FR/ns/app.xml"
+    }, {
+      "target": "en-IN",
+      "mapTo": "en",
+      "name": "English (India)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/en/ns/app.xml"
+    }, {
+      "target": "en-AF",
+      "mapTo": "en",
+      "name": "English (Africa)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/en/ns/app.xml"
+    }, {
+      "target": "ru-KZ",
+      "mapTo": "ru-RU",
+      "name": "Русский (Казахстан)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/ru-RU/ns/app.xml"
+    }, {
+      "target": "en-KZ",
+      "mapTo": "en",
+      "name": "English (Kazakhstan)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/en/ns/app.xml"
+    }, {
+      "target": "lo-LA",
+      "mapTo": "lo-LA",
+      "name": "ລາວ",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/lo-LA/ns/app.xml"
+    }, {
+      "target": "my-MM",
+      "mapTo": "my-MM",
+      "name": "မြန်မာစာ",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/my-MM/ns/app.xml"
+    }, {
+      "target": "si-LK",
+      "mapTo": "si-LK",
+      "name": "සිංහල",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/si-LK/ns/app.xml"
+    }, {
+      "target": "hu",
+      "mapTo": "hu-HU",
+      "name": "magyar nyelv",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/hu-HU/ns/app.xml"
+    }, {
+      "target": "ar",
+      "mapTo": "ar-SA",
+      "name": "العربية",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/ar-SA/ns/app.xml"
+    }, {
+      "target": "ja",
+      "mapTo": "ja-JP",
+      "name": "日本語",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/ja-JP/ns/app.xml"
+    }, {
+      "target": "en-JP",
+      "mapTo": "en",
+      "name": "English (Japan)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/en/ns/app.xml"
+    }, {
+      "target": "es-AR",
+      "mapTo": "es-AR",
+      "name": "Español (Argentina)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/es-AR/ns/app.xml"
+    }, {
+      "target": "en-TR",
+      "mapTo": "en-TR",
+      "name": "English (Türkiye)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/en-TR/ns/app.xml"
+    }, {
+      "target": "az-AZ",
+      "mapTo": "az-AZ",
+      "name": "Azərbaycan",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/az-AZ/ns/app.xml"
+    }, {
+      "target": "en-AE",
+      "mapTo": "en",
+      "name": "English (UAE)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/en/ns/app.xml"
+    }, {
+      "target": "km-KH",
+      "mapTo": "km-KH",
+      "name": "ភាសាខ្មែរ",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/km-KH/ns/app.xml"
+    }, {
+      "target": "lt-LT",
+      "mapTo": "lt-LT",
+      "name": "Lietuvių kalba",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/lt-LT/ns/app.xml"
+    }, {
+      "target": "am-ET",
+      "mapTo": "am-ET",
+      "name": "አማርኛ",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/am-ET/ns/app.xml"
+    }, {
+      "target": "hr-HR",
+      "mapTo": "hr-HR",
+      "name": "Hrvatski",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/hr-HR/ns/app.xml"
+    }, {
+      "target": "bn-BD",
+      "mapTo": "bn-BD",
+      "name": "বাংলা",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/bn-BD/ns/app.xml"
+    },
+    {
+      "target": "uz-UZ",
+      "mapTo": "uz-UZ",
+      "name": "Oʻzbekcha",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/uz-UZ/ns/app.xml"
+    },
+    {
+      "target": "ar-AE",
+      "mapTo": "ar-AE",
+      "name": "العربية (الإمارات)",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/ar-AE/ns/app.xml"
+    },
+    {
+      "target": "ky-KG",
+      "mapTo": "ky-KG",
+      "name": "Кыргыз",
+      "path": "/api/i18n/-/web/cms/sp/BINANCE_APP_80306b0de/ky-KG/ns/app.xml"
+    }
+  ]
+}

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preload</title>
+</head>
+<body>
+
+</body>
+<script>
+    (function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define([], factory);
+  } else if (typeof exports !== "undefined") {
+    factory();
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory();
+    global.index = mod.exports;
+  }
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
+  function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+  function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+  function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+  function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+  function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+  /* eslint-disable no-console */
+  // iife scope
+  (function () {
+    var defaultFetch = window.fetch;
+    var styleCache = {};
+    var scriptCache = {};
+
+    function defaultGetPublicPath() {
+      var entry = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+
+      if (_typeof(entry) === "object") {
+        return "/";
+      }
+
+      try {
+        var _URL = new URL(entry, location.href),
+            origin = _URL.origin,
+            pathname = _URL.pathname;
+
+        var paths = pathname.split("/"); // 移除最后一个元素
+
+        paths.pop();
+        return "".concat(origin).concat(paths.join("/"), "/");
+      } catch (e) {
+        console.warn(e);
+        return "";
+      }
+    }
+
+    function throwNonBlockingError(error, msg) {
+      setTimeout(function () {
+        console.error(msg);
+        throw error;
+      });
+    } // for prefetch
+
+
+    function getExternalStyleSheets(styles) {
+      var fetch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultFetch;
+      return Promise.all(styles.map(function (styleLink) {
+        if (isInlineCode(styleLink)) {
+          // if it is inline style
+          return getInlineCode(styleLink);
+        } else {
+          // external styles
+          return styleCache[styleLink] || (styleCache[styleLink] = fetch(styleLink).then(function (response) {
+            return response.text();
+          }));
+        }
+      }));
+    }
+
+    var isInlineCode = function isInlineCode(code) {
+      return code.startsWith("<");
+    }; // for prefetch
+
+
+    function getExternalScripts(scripts) {
+      var fetch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultFetch;
+      var errorCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {};
+
+      var fetchScript = function fetchScript(scriptUrl) {
+        return scriptCache[scriptUrl] || (scriptCache[scriptUrl] = fetch(scriptUrl).then(function (response) {
+          // usually browser treats 4xx and 5xx response of script loading as an error and will fire a script error event
+          // https://stackoverflow.com/questions/5625420/what-http-headers-responses-trigger-the-onerror-handler-on-a-script-tag/5625603
+          if (response.status >= 400) {
+            errorCallback();
+            throw new Error("".concat(scriptUrl, " load failed with status ").concat(response.status));
+          }
+
+          return response.text();
+        })["catch"](function (e) {
+          errorCallback();
+          throw e;
+        }));
+      };
+
+      return Promise.all(scripts.map(function (script) {
+        if (typeof script === "string") {
+          if (isInlineCode(script)) {
+            // if it is inline script
+            return getInlineCode(script);
+          } else {
+            // external script
+            return fetchScript(script);
+          }
+        } else {
+          var src = script.src;
+          return fetchScript(src);
+        }
+      }));
+    }
+    /**
+     * convert external css link to inline style for performance optimization
+     * @param template
+     * @param styles
+     * @param opts
+     * @return embedHTML
+     */
+
+
+    function getEmbedHTML(_ref) {
+      var template = _ref.template,
+          styles = _ref.styles,
+          scripts = _ref.scripts,
+          _ref$opts = _ref.opts,
+          opts = _ref$opts === void 0 ? {} : _ref$opts;
+      var _opts$fetch = opts.fetch,
+          fetch = _opts$fetch === void 0 ? window.fetch : _opts$fetch;
+      var embedHTML = template;
+      return Promise.all([getExternalStyleSheets(styles, fetch), getExternalScripts(scripts, fetch)]).then(function (_ref2) {
+        var _ref3 = _slicedToArray(_ref2, 2),
+            styleSheets = _ref3[0],
+            scriptList = _ref3[1];
+
+        var embedStyleHTML = styles.reduce(function (html, styleSrc, i) {
+          return html.replace(genLinkReplaceSymbol(styleSrc), "<style>/* ".concat(styleSrc, " */").concat(styleSheets[i], "</style>"));
+        }, embedHTML);
+        return [embedStyleHTML, scriptList];
+      });
+    }
+
+    var ALL_SCRIPT_REGEX = /(<script[\s\S]*?>)[\s\S]*?<\/script>/gi;
+    var SCRIPT_TAG_REGEX = /<(script)\s+((?!type=('|")text\/ng\x2Dtemplate\3)[\s\S])*?>[\s\S]*?<\/\1>/i;
+    var SCRIPT_SRC_REGEX = /.*\ssrc=('|")?([^>'"\s]+)/;
+    var SCRIPT_TYPE_REGEX = /.*\stype=('|")?([^>'"\s]+)/;
+    var LINK_TAG_REGEX = /<(link)\s+[\s\S]*?>/gi;
+    var LINK_PRELOAD_OR_PREFETCH_REGEX = /\srel=('|")?(preload|prefetch)\1/;
+    var LINK_HREF_REGEX = /.*\shref=('|")?([^>'"\s]+)/;
+    var LINK_AS_FONT = /.*\sas=('|")?font\1.*/;
+    var STYLE_TAG_REGEX = /<style[^>]*>[\s\S]*?<\/style>/gi;
+    var STYLE_TYPE_REGEX = /\s+rel=('|")?stylesheet\1.*/;
+    var STYLE_HREF_REGEX = /.*\shref=('|")?([^>'"\s]+)/;
+    var LINK_IGNORE_REGEX = /<link(\s+|\s+[\s\S]+\s+)ignore(\s*|\s+[\s\S]*|=[\s\S]*)>/i;
+    var STYLE_IGNORE_REGEX = /<style(\s+|\s+[\s\S]+\s+)ignore(\s*|\s+[\s\S]*|=[\s\S]*)>/i;
+    var SCRIPT_IGNORE_REGEX = /<script(\s+|\s+[\s\S]+\s+)ignore(\s*|\s+[\s\S]*|=[\s\S]*)>/i;
+
+    var genLinkReplaceSymbol = function genLinkReplaceSymbol(linkHref) {
+      var preloadOrPrefetch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      return "<!-- ".concat(preloadOrPrefetch ? "prefetch/preload" : "", " link ").concat(linkHref, " replaced by import-html-entry -->");
+    };
+
+    var genScriptReplaceSymbol = function genScriptReplaceSymbol(scriptSrc) {
+      var async = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      return "<!-- ".concat(async ? "async" : "", " script ").concat(scriptSrc, " replaced by import-html-entry -->");
+    };
+
+    var inlineScriptReplaceSymbol = "<!-- inline scripts replaced by import-html-entry -->";
+
+    var genIgnoreAssetReplaceSymbol = function genIgnoreAssetReplaceSymbol(url) {
+      return "<!-- ignore asset ".concat(url || "file", " replaced by import-html-entry -->");
+    };
+
+    function hasProtocol(url) {
+      return url.startsWith("//") || url.startsWith("http://") || url.startsWith("https://") || url.startsWith("nezha://");
+    }
+
+    function getEntirePath(path, baseURI) {
+      return new URL(path, baseURI).toString();
+    }
+
+    function getInlineCode(match) {
+      var start = match.indexOf(">") + 1;
+      var end = match.lastIndexOf("<");
+      return match.substring(start, end);
+    }
+
+    function isValidJavaScriptType(type) {
+      var handleTypes = ["text/javascript", "module", "application/javascript", "text/ecmascript", "application/ecmascript"];
+      return !type || handleTypes.indexOf(type) !== -1;
+    }
+    /**
+     * parse the script link from the template
+     * 1. collect stylesheets
+     * 2. use global eval to evaluate the inline scripts
+     *    see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function#Difference_between_Function_constructor_and_function_declaration
+     *    see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#Do_not_ever_use_eval!
+     * @param tpl
+     * @param baseURI
+     * @stripStyles whether to strip the css links
+     * @returns {{template: void | string | *, scripts: *[], entry: *}}
+     */
+
+
+    function processTpl(tpl, baseURI) {
+      var postProcessTemplate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+      var scripts = [];
+      var styles = [];
+      var entry = null;
+      var template = tpl.replace(LINK_TAG_REGEX, function (match) {
+        /*
+                         change the css link
+                         */
+        var styleType = !!match.match(STYLE_TYPE_REGEX);
+
+        if (styleType) {
+          var styleHref = match.match(STYLE_HREF_REGEX);
+          var styleIgnore = match.match(LINK_IGNORE_REGEX);
+
+          if (styleHref) {
+            var href = styleHref && styleHref[2];
+            var newHref = href;
+
+            if (href && !hasProtocol(href)) {
+              newHref = getEntirePath(href, baseURI);
+            }
+
+            if (styleIgnore) {
+              return genIgnoreAssetReplaceSymbol(newHref);
+            }
+
+            styles.push(newHref);
+            return genLinkReplaceSymbol(newHref);
+          }
+        }
+
+        var preloadOrPrefetchType = match.match(LINK_PRELOAD_OR_PREFETCH_REGEX) && match.match(LINK_HREF_REGEX) && !match.match(LINK_AS_FONT);
+
+        if (preloadOrPrefetchType) {
+          var _match$match = match.match(LINK_HREF_REGEX),
+              _match$match2 = _slicedToArray(_match$match, 3),
+              linkHref = _match$match2[2];
+
+          return genLinkReplaceSymbol(linkHref, true);
+        }
+
+        return match;
+      }).replace(STYLE_TAG_REGEX, function (match) {
+        if (STYLE_IGNORE_REGEX.test(match)) {
+          return genIgnoreAssetReplaceSymbol("style file");
+        }
+
+        return match;
+      }).replace(ALL_SCRIPT_REGEX, function (match, scriptTag) {
+        var scriptIgnore = scriptTag.match(SCRIPT_IGNORE_REGEX); // in order to keep the exec order of all javascripts
+
+        var matchedScriptTypeMatch = scriptTag.match(SCRIPT_TYPE_REGEX);
+        var matchedScriptType = matchedScriptTypeMatch && matchedScriptTypeMatch[2];
+
+        if (!isValidJavaScriptType(matchedScriptType)) {
+          return match;
+        } // if it is a external script
+
+
+        if (SCRIPT_TAG_REGEX.test(match) && scriptTag.match(SCRIPT_SRC_REGEX)) {
+          var matchedScriptSrcMatch = scriptTag.match(SCRIPT_SRC_REGEX);
+          var matchedScriptSrc = matchedScriptSrcMatch && matchedScriptSrcMatch[2]; // append the domain while the script not have an protocol prefix
+
+          if (matchedScriptSrc && !hasProtocol(matchedScriptSrc)) {
+            matchedScriptSrc = getEntirePath(matchedScriptSrc, baseURI);
+          }
+
+          if (scriptIgnore) {
+            return genIgnoreAssetReplaceSymbol(matchedScriptSrc || "js file");
+          }
+
+          if (matchedScriptSrc) {
+            scripts.push(matchedScriptSrc); // return scriptTag.match(SCRIPT_MODULE_REGEX) ? genModuleScriptReplaceSymbol(matchedScriptSrc, true) : genScriptReplaceSymbol(matchedScriptSrc, asyncScript);
+          }
+
+          return match;
+        } else {
+          if (scriptIgnore) {
+            return genIgnoreAssetReplaceSymbol("js file");
+          } // if it is an inline script
+
+
+          var code = getInlineCode(match); // remove script blocks when all of these lines are comments.
+
+          var isPureCommentBlock = code.split(/[\r\n]+/).every(function (line) {
+            return !line.trim() || line.trim().startsWith("//");
+          });
+
+          if (!isPureCommentBlock) {
+            scripts.push(match);
+          }
+
+          return match; // return scriptTag.match(SCRIPT_MODULE_REGEX) ? genModuleScriptReplaceSymbol('', true) :  inlineScriptReplaceSymbol;
+        }
+      });
+      scripts = scripts.filter(function (script) {
+        // filter empty script
+        return !!script;
+      });
+      var tplResult = {
+        template: template,
+        scripts: scripts,
+        styles: styles,
+        // set the last script as entry if have not set
+        entry: entry || scripts[scripts.length - 1]
+      };
+
+      if (typeof postProcessTemplate === "function") {
+        tplResult = postProcessTemplate(tplResult);
+      }
+
+      return tplResult;
+    }
+
+    window.__mp_inject_html__ = function (html, url) {
+      try {
+        var assetPublicPath = defaultGetPublicPath();
+
+        var _processTpl = processTpl(html, assetPublicPath),
+            template = _processTpl.template,
+            scripts = _processTpl.scripts,
+            entry = _processTpl.entry,
+            styles = _processTpl.styles;
+
+        var _errorHandler = function _errorHandler(err) {
+          console.error("preload inject error: ", err);
+
+          window.__mp_redirect__(url);
+        };
+
+        getEmbedHTML({
+          template: template,
+          styles: styles,
+          scripts: scripts,
+          opts: {
+            fetch: fetch
+          }
+        }).then(function (_ref4) {
+          var _ref5 = _slicedToArray(_ref4, 2),
+              EmbedHTML = _ref5[0],
+              scriptsRes = _ref5[1];
+
+          var fragment = document.createDocumentFragment();
+          var html = document.createElement("html");
+          html.innerHTML = EmbedHTML;
+          Array.prototype.slice.call(html.children).forEach(function (child) {
+            fragment.appendChild(child);
+          });
+          html = null;
+          var fragmentScripts = Array.prototype.slice.call(fragment.querySelectorAll("script"));
+          scripts.forEach(function (script, index) {
+            var s = document.createElement("script");
+            s.textContent = scriptsRes[index];
+            fragmentScripts[index].parentNode.appendChild(s); // remove the original (non-executing) node from the page
+
+            fragmentScripts[index].parentNode.removeChild(fragmentScripts[index]);
+          });
+
+          if (document.head) {
+            document.head.remove();
+          }
+
+          if (document.body) {
+            document.body.remove();
+          }
+
+          document.documentElement.appendChild(fragment);
+        })["catch"](_errorHandler);
+      } catch (err) {
+        errorHandler(err);
+      }
+
+      delete window.__mp_inject_html__;
+    };
+
+    window.__mp_redirect__ = function (url) {
+      console.log("preload redirect: ", url);
+      location.href = url;
+    };
+  })();
+});
+
+</script>
+</html>

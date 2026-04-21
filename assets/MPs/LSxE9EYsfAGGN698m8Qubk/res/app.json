@@ -1,0 +1,19 @@
+{
+  "entryPagePath": "pages/index/index",
+  "darkmode": true,
+  "subThemes": [
+    "dark_midnight"
+  ],
+  "window": {
+    "backgroundColor": "#00000000"
+  },
+  "pages": [
+    "pages/index/index"
+  ],
+  "appid": "LSxE9EYsfAGGN698m8Qubk",
+  "skeleton": {},
+  "page": {
+    "pages/index/index": {}
+  },
+  "widgetConfigs": {}
+}
