@@ -64,7 +64,7 @@ class _TimeframePill extends StatelessWidget {
         child: Text(
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
             color: active
                 ? theme.colorScheme.onSurface
                 : AppColors.lightTextTertiary,

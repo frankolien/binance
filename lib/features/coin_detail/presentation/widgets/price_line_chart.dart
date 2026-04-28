@@ -56,14 +56,14 @@ class PriceLineChart extends StatelessWidget {
               'BINANCE',
               style: TextStyle(
                 fontSize: 28,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 letterSpacing: 2,
                 color: AppColors.lightTextPrimary.withValues(alpha: 0.04),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
+            padding: const EdgeInsets.fromLTRB(20, 32, 20, 0),
             child: LineChart(
               LineChartData(
                 minX: 0,
@@ -113,7 +113,7 @@ class PriceLineChart extends StatelessWidget {
                         style: const TextStyle(
                           color: AppColors.lightTextTertiary,
                           fontSize: 13,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),

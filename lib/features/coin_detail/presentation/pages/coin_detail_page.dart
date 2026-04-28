@@ -86,6 +86,7 @@ class _CoinDetailViewState extends State<_CoinDetailView> {
                   baseAsset: base,
                   coinName: coinName,
                   ticker: ticker,
+                  klines: state.klines,
                 ),
                 Expanded(
                   child: _buildBody(context, state, base, coinName),
@@ -184,6 +185,16 @@ class _CoinDetailViewState extends State<_CoinDetailView> {
     }
     return symbol;
   }
+
+  /// % change across the active timeframe's klines. Falls back to the 24h
+  /// ticker change when the chart isn't loaded yet.
+  static double _changePercent(List<Kline> klines, Ticker ticker) {
+    if (klines.length < 2) return ticker.priceChangePercent;
+    final first = klines.first.close.toDouble();
+    final last = klines.last.close.toDouble();
+    if (first == 0) return ticker.priceChangePercent;
+    return ((last - first) / first) * 100.0;
+  }
 }
 
 class _Header extends StatelessWidget {
@@ -192,12 +203,14 @@ class _Header extends StatelessWidget {
     required this.baseAsset,
     required this.coinName,
     required this.ticker,
+    required this.klines,
   });
 
   final bool collapsed;
   final String baseAsset;
   final String coinName;
   final Ticker? ticker;
+  final List<Kline> klines;
 
   @override
   Widget build(BuildContext context) {
@@ -219,6 +232,7 @@ class _Header extends StatelessWidget {
                       key: const ValueKey('sticky'),
                       baseAsset: baseAsset,
                       ticker: ticker!,
+                      klines: klines,
                       theme: theme,
                     )
                   : const SizedBox.shrink(key: ValueKey('blank')),
@@ -242,17 +256,20 @@ class _StickyTitle extends StatelessWidget {
   const _StickyTitle({
     required this.baseAsset,
     required this.ticker,
+    required this.klines,
     required this.theme,
     super.key,
   });
 
   final String baseAsset;
   final Ticker ticker;
+  final List<Kline> klines;
   final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
-    final positive = ticker.isPositive;
+    final percent = _CoinDetailViewState._changePercent(klines, ticker);
+    final positive = percent >= 0;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -269,16 +286,16 @@ class _StickyTitle extends StatelessWidget {
             Text(
               PriceFormatter.formatUsd(ticker.lastPrice),
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(width: 6),
             Text(
-              PriceFormatter.formatPercent(ticker.priceChangePercent),
+              PriceFormatter.formatPercent(percent),
               style: TextStyle(
                 color: positive ? AppColors.buy : AppColors.sell,
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -293,16 +310,19 @@ class _PriceBlock extends StatelessWidget {
     required this.ticker,
     required this.baseAsset,
     required this.coinName,
+    required this.klines,
   });
 
   final Ticker ticker;
   final String baseAsset;
   final String coinName;
+  final List<Kline> klines;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final positive = ticker.isPositive;
+    final percent = _CoinDetailViewState._changePercent(klines, ticker);
+    final positive = percent >= 0;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
       child: Column(
@@ -313,7 +333,7 @@ class _PriceBlock extends StatelessWidget {
               Text(
                 baseAsset,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   fontSize: 17,
                 ),
               ),
@@ -335,7 +355,7 @@ class _PriceBlock extends StatelessWidget {
                 child: Text(
                   PriceFormatter.formatUsd(ticker.lastPrice),
                   style: theme.textTheme.displayMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
                     fontSize: 36,
                     height: 1.1,
                   ),
@@ -354,11 +374,11 @@ class _PriceBlock extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            PriceFormatter.formatPercent(ticker.priceChangePercent),
+            PriceFormatter.formatPercent(percent),
             style: TextStyle(
               color: positive ? AppColors.buy : AppColors.sell,
               fontSize: 17,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

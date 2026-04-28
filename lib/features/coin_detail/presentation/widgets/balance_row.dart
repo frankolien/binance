@@ -18,7 +18,7 @@ class BalanceRow extends StatelessWidget {
             child: Text(
               'Your balance',
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -31,7 +31,7 @@ class BalanceRow extends StatelessWidget {
                   Text(
                     '0',
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(width: 4),

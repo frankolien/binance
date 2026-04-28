@@ -38,7 +38,7 @@ class _AboutSectionState extends State<AboutSection> {
           Text(
             'About $ticker',
             style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
               fontSize: 22,
             ),
           ),
@@ -179,7 +179,7 @@ class _StatRow extends StatelessWidget {
               Text(
                 value,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               if (subValue != null) ...[
@@ -232,7 +232,7 @@ class _ResourceLink extends StatelessWidget {
               label,
               style: const TextStyle(
                 color: AppColors.brandYellowPressed,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 fontSize: 15,
               ),
             ),
@@ -275,7 +275,7 @@ class _IntroductionText extends StatelessWidget {
                 text: expanded ? '  Less' : 'More',
                 style: const TextStyle(
                   color: AppColors.brandYellowPressed,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
           ],
