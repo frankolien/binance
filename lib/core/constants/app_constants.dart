@@ -8,6 +8,8 @@ class AppConstants {
   static const String binanceWsBase = 'wss://data-stream.binance.vision';
   static const String binanceWsBaseMain = 'wss://stream.binance.com:9443';
 
+  static const String coinGeckoRestBase = 'https://api.coingecko.com/api/v3';
+
   static const Duration defaultTimeout = Duration(seconds: 15);
   static const Duration wsReconnectInitial = Duration(seconds: 1);
   static const Duration wsReconnectMax = Duration(seconds: 30);

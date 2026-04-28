@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../constants/app_constants.dart';
 import '../../features/settings/presentation/bloc/app_settings_cubit.dart';
+import '../constants/app_constants.dart';
+import '../widgets/lite_bottom_nav.dart';
 import 'app_router.dart';
 
 @RoutePage()
@@ -38,10 +40,10 @@ class ShellPage extends StatelessWidget {
             final tabsRouter = AutoTabsRouter.of(context);
             return Scaffold(
               body: child,
-              bottomNavigationBar: _BottomNav(
-                tabsRouter: tabsRouter,
-                isPro: isPro,
-              ),
+              extendBody: !isPro,
+              bottomNavigationBar: isPro
+                  ? _ProBottomNav(tabsRouter: tabsRouter)
+                  : _LiteBottomNavWrapper(tabsRouter: tabsRouter),
             );
           },
         );
@@ -50,39 +52,74 @@ class ShellPage extends StatelessWidget {
   }
 }
 
-class _BottomNav extends StatelessWidget {
-  const _BottomNav({required this.tabsRouter, required this.isPro});
+class _LiteBottomNavWrapper extends StatelessWidget {
+  const _LiteBottomNavWrapper({required this.tabsRouter});
 
   final TabsRouter tabsRouter;
-  final bool isPro;
 
   @override
   Widget build(BuildContext context) {
-    final items = isPro
-        ? const [
-            _NavItem(Icons.home_outlined, Icons.home, 'Home'),
-            _NavItem(Icons.show_chart_outlined, Icons.show_chart, 'Markets'),
-            _NavItem(Icons.swap_horiz_outlined, Icons.swap_horiz, 'Trade'),
-            _NavItem(Icons.trending_up_outlined, Icons.trending_up, 'Futures'),
-            _NavItem(
-              Icons.account_balance_wallet_outlined,
-              Icons.account_balance_wallet,
-              'Assets',
-            ),
-          ]
-        : const [
-            _NavItem(Icons.show_chart_outlined, Icons.show_chart, 'Markets'),
-            _NavItem(Icons.forum_outlined, Icons.forum, 'Square'),
-            _NavItem(Icons.swap_horiz_outlined, Icons.swap_horiz, 'Trade'),
-            _NavItem(Icons.explore_outlined, Icons.explore, 'Discover'),
-            _NavItem(Icons.pie_chart_outline, Icons.pie_chart, 'Portfolio'),
-          ];
+    return LiteBottomNav(
+      activeIndex: tabsRouter.activeIndex,
+      items: [
+        LiteBottomNavItem(
+          icon: PhosphorIconsRegular.chartBar,
+          activeIcon: PhosphorIconsFill.chartBar,
+          label: 'Markets',
+        ),
+        LiteBottomNavItem(
+          icon: PhosphorIconsRegular.chatCircleText,
+          activeIcon: PhosphorIconsFill.chatCircleText,
+          label: 'Square',
+        ),
+        // Center FAB takes index 2; LiteBottomNav skips rendering it.
+        LiteBottomNavItem(
+          icon: PhosphorIconsRegular.arrowsLeftRight,
+          activeIcon: PhosphorIconsFill.arrowsLeftRight,
+          label: 'Trade',
+        ),
+        LiteBottomNavItem(
+          icon: PhosphorIconsRegular.compass,
+          activeIcon: PhosphorIconsFill.compass,
+          label: 'Discover',
+        ),
+        LiteBottomNavItem(
+          icon: PhosphorIconsRegular.wallet,
+          activeIcon: PhosphorIconsFill.wallet,
+          label: 'Portfolio',
+        ),
+      ],
+      onTabSelected: tabsRouter.setActiveIndex,
+      onTradeTapped: () => tabsRouter.setActiveIndex(2),
+    );
+  }
+}
 
+class _ProBottomNav extends StatelessWidget {
+  const _ProBottomNav({required this.tabsRouter});
+
+  final TabsRouter tabsRouter;
+
+  static final _items = [
+    _NavItem(
+        PhosphorIconsRegular.house, PhosphorIconsFill.house, 'Home'),
+    _NavItem(PhosphorIconsRegular.chartBar, PhosphorIconsFill.chartBar,
+        'Markets'),
+    _NavItem(PhosphorIconsRegular.arrowsLeftRight,
+        PhosphorIconsFill.arrowsLeftRight, 'Trade'),
+    _NavItem(PhosphorIconsRegular.trendUp, PhosphorIconsFill.trendUp,
+        'Futures'),
+    _NavItem(
+        PhosphorIconsRegular.wallet, PhosphorIconsFill.wallet, 'Assets'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     return NavigationBar(
       selectedIndex: tabsRouter.activeIndex,
       onDestinationSelected: tabsRouter.setActiveIndex,
       destinations: [
-        for (final item in items)
+        for (final item in _items)
           NavigationDestination(
             icon: Icon(item.icon),
             selectedIcon: Icon(item.selectedIcon),
