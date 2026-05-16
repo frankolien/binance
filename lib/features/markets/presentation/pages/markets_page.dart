@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/coin_row_skeleton.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../markets_meta/domain/entities/coin_meta.dart';
 import '../../domain/entities/ticker.dart';
 import '../bloc/markets_bloc.dart';
@@ -99,11 +99,12 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 64,
-        height: 64,
-        child: Lottie.asset(AppAssets.lottieLoadingYellow, repeat: true),
+    return SkeletonGroup(
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: 10,
+        itemBuilder: (_, __) => const CoinRowSkeleton(),
       ),
     );
   }

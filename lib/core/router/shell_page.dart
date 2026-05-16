@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../features/settings/presentation/bloc/app_settings_cubit.dart';
+import '../../features/trade/presentation/widgets/trade_action_sheet.dart';
 import '../constants/app_constants.dart';
 import '../widgets/lite_bottom_nav.dart';
 import 'app_router.dart';
@@ -90,7 +91,7 @@ class _LiteBottomNavWrapper extends StatelessWidget {
         ),
       ],
       onTabSelected: tabsRouter.setActiveIndex,
-      onTradeTapped: () => tabsRouter.setActiveIndex(2),
+      onTradeTapped: () => TradeActionSheet.show(context),
     );
   }
 }

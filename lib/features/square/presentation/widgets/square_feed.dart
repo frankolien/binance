@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/di/injection.dart';
+import '../../../../core/widgets/coin_row_skeleton.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../domain/repositories/square_repository.dart';
 import '../bloc/square_bloc.dart';
 import 'square_post_card.dart';
@@ -106,11 +106,11 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 64,
-        height: 64,
-        child: Lottie.asset(AppAssets.lottieLoadingYellow, repeat: true),
+    return SkeletonGroup(
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 4,
+        itemBuilder: (_, __) => const SquarePostSkeleton(),
       ),
     );
   }

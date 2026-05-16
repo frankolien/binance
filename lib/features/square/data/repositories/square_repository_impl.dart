@@ -38,3 +38,4 @@ class SquareRepositoryImpl implements SquareRepository {
     }
   }
 }
+

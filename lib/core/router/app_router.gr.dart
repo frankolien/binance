@@ -27,6 +27,22 @@ class AssetsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [BuyPage]
+class BuyRoute extends PageRouteInfo<void> {
+  const BuyRoute({List<PageRouteInfo>? children})
+    : super(BuyRoute.name, initialChildren: children);
+
+  static const String name = 'BuyRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const BuyPage();
+    },
+  );
+}
+
+/// generated route for
 /// [CoinDetailPage]
 class CoinDetailRoute extends PageRouteInfo<CoinDetailRouteArgs> {
   CoinDetailRoute({

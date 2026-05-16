@@ -6,6 +6,7 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/tab_stub_pages.dart';
 import '../../features/markets/presentation/pages/markets_page.dart';
 import '../../features/square/presentation/pages/square_page.dart';
+import '../../features/trade/buy/presentation/pages/buy_page.dart';
 import 'shell_page.dart';
 
 part 'app_router.gr.dart';
@@ -30,5 +31,6 @@ class AppRouter extends RootStackRouter {
           ],
         ),
         AutoRoute(page: CoinDetailRoute.page, path: '/coin/:symbol'),
+        AutoRoute(page: BuyRoute.page, path: '/buy'),
       ];
 }

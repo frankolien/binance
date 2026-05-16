@@ -5,6 +5,8 @@ import '../../features/coin_detail/data/datasources/coin_about_remote_datasource
 import '../../features/coin_detail/data/datasources/klines_remote_datasource.dart';
 import '../../features/coin_detail/data/repositories/coin_detail_repository_impl.dart';
 import '../../features/coin_detail/domain/repositories/coin_detail_repository.dart';
+import '../../features/auth/data/repositories/stub_user_profile_repository.dart';
+import '../../features/auth/domain/repositories/user_profile_repository.dart';
 import '../../features/coin_detail/presentation/bloc/coin_detail_bloc.dart';
 import '../../features/markets/data/datasources/markets_remote_datasource.dart';
 import '../../features/markets/data/repositories/markets_repository_impl.dart';
@@ -18,6 +20,9 @@ import '../../features/square/data/datasources/square_remote_datasource.dart';
 import '../../features/square/data/repositories/square_repository_impl.dart';
 import '../../features/square/domain/repositories/square_repository.dart';
 import '../../features/square/presentation/bloc/square_bloc.dart';
+import '../../features/trade/buy/data/repositories/stub_buy_repository.dart';
+import '../../features/trade/buy/domain/repositories/buy_repository.dart';
+import '../../features/trade/buy/presentation/bloc/buy_flow_bloc.dart';
 import '../constants/app_constants.dart';
 
 final getIt = GetIt.instance;
@@ -109,6 +114,16 @@ Future<void> configureDependencies() async {
     () => SquareRepositoryImpl(getIt<SquareRemoteDataSource>()),
   );
 
+  // ────── Auth / profile ──────
+  getIt.registerLazySingleton<UserProfileRepository>(
+    () => const StubUserProfileRepository(),
+  );
+
+  // ────── Trade / Buy feature ──────
+  getIt.registerLazySingleton<BuyRepository>(
+    () => StubBuyRepository(getIt<MarketsRepository>()),
+  );
+
   // ────── Blocs ──────
   getIt.registerFactory<MarketsBloc>(
     () => MarketsBloc(
@@ -130,6 +145,10 @@ Future<void> configureDependencies() async {
       category: category,
       repository: getIt<SquareRepository>(),
     ),
+  );
+
+  getIt.registerFactory<BuyFlowBloc>(
+    () => BuyFlowBloc(getIt<BuyRepository>()),
   );
 
   // ────── App-wide settings ──────
