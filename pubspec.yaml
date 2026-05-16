@@ -54,6 +54,7 @@ dependencies:
   decimal: ^3.0.2
   logger: ^2.4.0
   phosphor_flutter: ^2.1.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/lottie/
+    - .env
 
   fonts:
     - family: BinancePlex

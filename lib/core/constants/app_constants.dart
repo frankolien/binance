@@ -10,6 +10,9 @@ class AppConstants {
 
   static const String coinGeckoRestBase = 'https://api.coingecko.com/api/v3';
 
+  static const String cryptoCompareRestBase =
+      'https://min-api.cryptocompare.com';
+
   static const Duration defaultTimeout = Duration(seconds: 15);
   static const Duration wsReconnectInitial = Duration(seconds: 1);
   static const Duration wsReconnectMax = Duration(seconds: 30);

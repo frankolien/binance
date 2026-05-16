@@ -14,12 +14,17 @@ import '../../features/markets_meta/data/datasources/coin_gecko_remote_datasourc
 import '../../features/markets_meta/data/repositories/coin_meta_repository_impl.dart';
 import '../../features/markets_meta/domain/repositories/coin_meta_repository.dart';
 import '../../features/settings/presentation/bloc/app_settings_cubit.dart';
+import '../../features/square/data/datasources/square_remote_datasource.dart';
+import '../../features/square/data/repositories/square_repository_impl.dart';
+import '../../features/square/domain/repositories/square_repository.dart';
+import '../../features/square/presentation/bloc/square_bloc.dart';
 import '../constants/app_constants.dart';
 
 final getIt = GetIt.instance;
 
 const _binanceDioName = 'binanceDio';
 const _coinGeckoDioName = 'coinGeckoDio';
+const _cryptoCompareDioName = 'cryptoCompareDio';
 
 Future<void> configureDependencies() async {
   // ────── HTTP clients ──────
@@ -45,6 +50,18 @@ Future<void> configureDependencies() async {
       ),
     ),
     instanceName: _coinGeckoDioName,
+  );
+
+  getIt.registerLazySingleton<Dio>(
+    () => Dio(
+      BaseOptions(
+        baseUrl: AppConstants.cryptoCompareRestBase,
+        connectTimeout: AppConstants.defaultTimeout,
+        receiveTimeout: AppConstants.defaultTimeout,
+        headers: {'Accept': 'application/json'},
+      ),
+    ),
+    instanceName: _cryptoCompareDioName,
   );
 
   // ────── Markets feature ──────
@@ -82,6 +99,16 @@ Future<void> configureDependencies() async {
     ),
   );
 
+  // ────── Square feature ──────
+  getIt.registerLazySingleton<SquareRemoteDataSource>(
+    () => SquareRemoteDataSourceImpl(
+      getIt<Dio>(instanceName: _cryptoCompareDioName),
+    ),
+  );
+  getIt.registerLazySingleton<SquareRepository>(
+    () => SquareRepositoryImpl(getIt<SquareRemoteDataSource>()),
+  );
+
   // ────── Blocs ──────
   getIt.registerFactory<MarketsBloc>(
     () => MarketsBloc(
@@ -95,6 +122,13 @@ Future<void> configureDependencies() async {
       symbol: symbol,
       marketsRepository: getIt<MarketsRepository>(),
       detailRepository: getIt<CoinDetailRepository>(),
+    ),
+  );
+
+  getIt.registerFactoryParam<SquareBloc, SquareCategory, void>(
+    (category, _) => SquareBloc(
+      category: category,
+      repository: getIt<SquareRepository>(),
     ),
   );
 

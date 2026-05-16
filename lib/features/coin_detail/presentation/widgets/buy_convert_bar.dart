@@ -37,6 +37,8 @@ class BuyConvertBar extends StatelessWidget {
                     child: const Text('Buy'),
                   ),
                 ),
+                
+                
               ),
               const SizedBox(width: 12),
               Expanded(

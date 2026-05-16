@@ -716,6 +716,151 @@ Follow the same clean-arch ring:
 
 ---
 
+# Chapter 8 — Square (news feed, Lite)
+
+The first feature where **Binance has no API for the data**. This chapter is shorter than the others because the architecture pattern is already familiar — what changes is the data source and how you design the entity when you're not mirroring a Binance payload.
+
+## 8.1 Why this chapter is different
+
+Every previous feature pulled from Binance REST/WS. Square is different: Binance Square is a private, signed-in social product. The public endpoints don't exist. The internal `bapi/composite/...` endpoints the web app calls aren't documented, fingerprint-gated, and will 403 in production — not safe to ship against.
+
+**Implication for design.** The entity isn't shaped by a Binance DTO. You design `SquarePost` around what the UI needs (per RESEARCH.md §Square), and the DTO mirrors whatever third-party provider you pick. If you swap providers later, the entity stays — only the DTO + mapper change.
+
+**Self-check.**
+- If the entity should mirror what the UI shows (not the wire format), what's left for the DTO to do? (Be the exact shape of the third-party response, so the parser doesn't fight it.)
+
+## 8.2 Picking the provider
+
+**Recommended: CryptoCompare News** (`https://min-api.cryptocompare.com/data/v2/news/`).
+- Free tier ~100k calls/month with an API key.
+- Returns `imageurl`, `source`, `categories`, `tags`, `published_on`, `body` — maps cleanly to the Lite Square card.
+- Stable, documented, single endpoint.
+
+**Alternative: CryptoPanic** — has a votes/engagement signal that's closer to Square's social feel, but a thinner free tier. Use as a *secondary* later if you want the action-row counts to feel alive.
+
+**What to research.**
+- CryptoCompare News API docs — endpoint, params, response shape.
+- Where the API key goes (query string `?api_key=...` is simplest; header is also supported).
+- Rate-limit headers and how to surface a friendly error.
+
+**What to decide.**
+- Single provider for v1. Don't merge feeds yet — each provider has its own pagination contract and that fight isn't worth it on day one.
+
+## 8.3 What a SquarePost IS (domain entity)
+
+What the Lite card shows (RESEARCH.md):
+- Avatar + username + relative time + dismiss X
+- Body text with `$TICKER` cashtags (yellow)
+- Optional hero image
+- Ticker pill (symbol + % change) under the image
+- Action row: comments, reposts, likes, views, share
+
+**Entity fields.**
+- `id` — provider-scoped string.
+- `author` — name + avatarUrl. (CryptoCompare gives `source_info.name` + `source_info.img`.)
+- `publishedAt` — `DateTime` (CryptoCompare sends unix seconds — convert at DTO→entity).
+- `body` — plain text with `$TICKER` substrings intact.
+- `imageUrl` — nullable String.
+- `tickerMentions` — `List<String>` parsed once from body at mapping time. Don't re-parse in widgets.
+- `categories` — `List<String>` for tab routing.
+- `sourceUrl` — for "Read more" / external open.
+
+**Key design question.** The ticker pill needs a % change. The third-party news API doesn't provide it. Two options:
+- **A — Show a static pill** with whatever the provider gives (often nothing). Pill becomes decorative.
+- **B — Cross-feature lookup**: if the mentioned ticker exists in `MarketsBloc`'s loaded map, render the pill with live %. Otherwise omit. *Recommended.* Re-uses data you already have, no extra request.
+
+**What to research.**
+- Dart regex syntax for `\$([A-Z]{2,10})\b` to parse cashtags.
+- `RichText` + `TextSpan` for inline-coloured cashtags in the card body.
+
+**Self-check.**
+- Why parse cashtags at DTO→entity time instead of in the widget? (Parse-once. The widget rebuilds on every scroll tick — regex on every rebuild is wasted CPU.)
+- If CryptoCompare renames `imageurl` to `image_url` tomorrow, which files change? (DTO + mapper. Entity, Bloc, UI untouched — same rule as Markets.)
+
+## 8.4 The five tabs — what to build vs stub
+
+| Tab | Real Binance | Your v1 |
+|---|---|---|
+| Discover | Algorithm-mixed feed | CryptoCompare default (no category filter) |
+| Following | Posts from followed accounts | **Stub** — empty state ("Sign in to follow creators"). No social graph in Phase 1. |
+| Hot | Engagement-sorted | Sort by `published_on desc`, take top 20. You have no engagement signal. |
+| News | News-category only | CryptoCompare `categories=Markets|Trading|Regulation` |
+| Academy | Binance educational LMS | **Stub** — empty state. Not a feed problem. |
+
+**Why stubbing is fine.** RESEARCH.md captures these as flows you haven't observed end-to-end yet. Building real Following requires auth + social graph, which is Chapter 6 work. Don't pre-build it.
+
+**What to research.**
+- CryptoCompare's `categories` query param — what category names are valid, how they combine.
+- `DefaultTabController` + `TabBar` + `TabBarView` in Flutter.
+
+**What to decide.**
+- One Bloc with tab-index in state, or one Bloc per tab? Per-tab is simpler — each tab owns its own cursor + cache. Pick per-tab.
+
+## 8.5 Square Bloc — events & states
+
+**Events.**
+- `SquareLoadRequested(category)` — first load when tab mounts.
+- `SquareRefreshRequested` — pull-to-refresh.
+- `SquareLoadMore` — pagination via CryptoCompare's `lTs` (last-timestamp cursor).
+
+**States (sealed).**
+- `SquareInitial`
+- `SquareLoading`
+- `SquareLoaded(posts, isLoadingMore, hasReachedEnd)`
+- `SquareError(failure)`
+
+**What to research.**
+- `EventTransformer.droppable` — for refresh (ignore spam taps while one is in flight).
+- `EventTransformer.sequential` — for `LoadMore` (queue, don't drop).
+- CryptoCompare's cursor pagination — pass `lTs=<oldest_published_on>` to fetch older.
+
+**Self-check.**
+- On tab switch, do you refetch or reuse posts? (Reuse if you cached; refetch only on pull-to-refresh. Saves API quota.)
+- What if the user yanks the refresh handle 5 times in a second? (`droppable` collapses those into one in-flight request.)
+
+## 8.6 UI shape — page → tabs → list → card
+
+```
+SquarePage (StatelessWidget)
+├── AppBar (search icon)
+├── TabBar (5 tabs)
+└── TabBarView
+    └── SquareFeed(category)         × 5  (each provides its own Bloc)
+        ├── RefreshIndicator
+        └── ListView.separated
+            └── SquarePostCard       (or EmptyTabPlaceholder for Following/Academy)
+                ├── Header row (avatar, name, time, dismiss)
+                ├── RichText body (cashtags coloured)
+                ├── Optional image
+                ├── Ticker pill (if mention is in Markets map)
+                └── Action row
++ FloatingActionButton (yellow + with badge — "coming soon" snack on tap)
+```
+
+**What to research.**
+- `cached_network_image` — non-negotiable for image scrolling perf.
+- A relative-time formatter — either the `timeago` package or hand-roll one. Hand-rolling teaches more.
+
+**What to decide.**
+- Image placeholder — shimmer skeleton vs solid grey. Solid first, shimmer later.
+- Empty state copy for Following/Academy — write it once, share across both via a small `EmptyTabPlaceholder` widget.
+
+## 8.7 What to research specifically before Chapter 8
+
+Before writing any Square code, make sure you can answer:
+
+1. What's the URL and response shape of CryptoCompare's `/data/v2/news/`?
+2. What does a single article object look like (fields + types)?
+3. How do you authenticate (API key in query string vs header) and how is the key kept out of git?
+4. How does CryptoCompare's `lTs` pagination cursor work?
+5. What categories are valid in the `categories` query param?
+6. How do you write a Dart regex that captures `$TICKER` cashtags (2–10 uppercase letters, word-boundary)?
+7. How do you cross-reference a ticker from a Square post with the Markets Bloc's loaded tickers — without coupling Square's bloc to Markets' bloc? (Hint: read-only access via `MarketsBloc.state` or a dedicated `MarketsLookup` interface registered in `get_it`.)
+
+If any answer is fuzzy, read the CryptoCompare docs + RESEARCH.md §Square before coding.
+
+---
+
 # How this document grows
 
 Each time we tackle a new feature:

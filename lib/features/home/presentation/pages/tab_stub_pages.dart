@@ -5,14 +5,6 @@ import '../../../../core/widgets/placeholder_page.dart';
 
 // Lite stubs
 @RoutePage()
-class SquarePage extends StatelessWidget {
-  const SquarePage({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const PlaceholderPage(title: 'Square');
-}
-
-@RoutePage()
 class TradePage extends StatelessWidget {
   const TradePage({super.key});
   @override

@@ -5,6 +5,7 @@ import '../../features/coin_detail/presentation/pages/coin_detail_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/tab_stub_pages.dart';
 import '../../features/markets/presentation/pages/markets_page.dart';
+import '../../features/square/presentation/pages/square_page.dart';
 import 'shell_page.dart';
 
 part 'app_router.gr.dart';
